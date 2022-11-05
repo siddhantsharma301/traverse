@@ -7,64 +7,77 @@ import Link from 'next/link';
 
 
 const WorldIDWidget = dynamic<WidgetProps>(
-  () => import('@worldcoin/id').then((mod) => mod.WorldIDWidget),
-  { ssr: false }
+    () => import('@worldcoin/id').then((mod) => mod.WorldIDWidget),
+    { ssr: false }
 )
 
-const data = [
-    {
-        "address": "0x0020213",
-    },
-    {
-        "address": "0x123456789",
-    },
-    {
-        "address": "0x0987654321",
-    },
-    {
-        "address": "0xqwert67890",
-    }
+// const data = [
+//     {
+//         "address": "0x0020213",
+//     },
+//     {
+//         "address": "0x123456789",
+//     },
+//     {
+//         "address": "0x0987654321",
+//     },
+//     {
+//         "address": "0xqwert67890",
+//     }
 
-]
+// ]
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Traverse</title>
-        <meta name="description" content="Smart contract security report generator" />
-        <link rel="icon" href="/favicon.png" />
-      </Head>
+interface Props {
+    data: any[]
+}
 
-      <main className={styles.main}>
-        <h1 className={styles.title_recent}>
-          View Recent Contracts
-        </h1>
+export default function Home({ data }: Props) {
+    return (
+        <div className={styles.container}>
+            <Head>
+                <title>Traverse</title>
+                <meta name="description" content="Smart contract security report generator" />
+                <link rel="icon" href="/favicon.png" />
+            </Head>
 
-        <div className={styles.grid}>
-            {
-                data.map((contract) => (
-                    <Link href={`contracts/${contract.address}`} className={styles.card_recent}>
-                    <h2>Address: {contract.address}</h2>
-                  </Link>
-                ))            
-            }
+            <main className={styles.main}>
+                <h1 className={styles.title_recent}>
+                    View Recent Contracts
+                </h1>
+
+                <div className={styles.grid}>
+                    {
+                        data.map((contract) => (
+                            <Link href={`contracts/${contract.address}`} className={styles.card_recent}>
+                                <h2>Address: {contract.address}</h2>
+                            </Link>
+                        ))
+                    }
+                </div>
+            </main>
+
+            <footer className={styles.footer}>
+                <a
+                    href=""
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Made with
+                    <span className={styles.logo}>
+                        <Image src="/heart.png" alt="Heart Logo" width={20} height={20} />
+                    </span>
+                    {' '}at ETHSF
+                </a>
+            </footer>
         </div>
-      </main>
+    )
+}
 
-      <footer className={styles.footer}>
-        <a
-          href=""
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Made with
-          <span className={styles.logo}>
-            <Image src="/heart.png" alt="Heart Logo" width={20} height={20} />
-          </span>
-          {' '}at ETHSF
-        </a>
-      </footer>
-    </div>
-  )
+export async function getServerSideProps() {
+    // Fetch data from external API
+    const res = await fetch(`http://localhost:3000/top_contracts`)
+    const data = await res.json()
+
+    // Pass data to the page via props
+    return { props: { data } }
 }
