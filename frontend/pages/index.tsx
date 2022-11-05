@@ -1,19 +1,27 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { WidgetProps } from '@worldcoin/id'
+import dynamic from "next/dynamic";
+
+
+const WorldIDWidget = dynamic<WidgetProps>(
+  () => import('@worldcoin/id').then((mod) => mod.WorldIDWidget),
+  { ssr: false }
+)
 
 export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Sonder</title>
+        <title>Traverse</title>
         <meta name="description" content="Smart contract security verifier" />
         <link rel="icon" href="/favicon.png" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Sonder
+          Traverse
         </h1>
 
         <p className={styles.description}>
@@ -21,7 +29,7 @@ export default function Home() {
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
+          <a href="/recent" className={styles.card}>
             <h2>View Recent Contracts &rarr;</h2>
             <p>View recently generated security reports on contracts.</p>
           </a>
@@ -32,6 +40,8 @@ export default function Home() {
           </a>
 
         </div>
+
+
       </main>
 
       <footer className={styles.footer}>
