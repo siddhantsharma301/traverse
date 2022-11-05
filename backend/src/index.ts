@@ -18,7 +18,7 @@ app.get("/test", async (req: express.Request, res: express.Response) => {
   const contractAddr = req.query.contractAddr;
   if (contractAddrToCID.has(contractAddr as string)) {
     const cid = contractAddrToCID.get(contractAddr as string);
-    return res.status(200).json({cid: cid});
+    return res.status(200).json({ cid: cid });
   }
   try {
     exec(`slither ${contractAddr} --json ${contractAddr}.json`);
@@ -26,9 +26,9 @@ app.get("/test", async (req: express.Request, res: express.Response) => {
     return res.status(500).json(error);
   }
   const file = await getFilesFromPath(`${contractAddr}.json`)
-  const cid = storageClient.put(file);
+  const cid = await storageClient.put(file);
   contractAddrToCID.set(contractAddr as string, cid);
-  return res.status(200).json({cid: cid});
+  return res.status(200).json({ cid: cid });
 });
 
 app.listen(3000, () => {
