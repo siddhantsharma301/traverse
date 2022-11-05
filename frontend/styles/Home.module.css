@@ -126,6 +126,12 @@
   font-size: 1.5rem;
 }
 
+.contract_name {
+  margin: 0 1 1rem 0;
+  font-size: 1.5rem;
+  color: #0070f3;
+}
+
 .card p {
   margin: 0;
   font-size: 1.25rem;
