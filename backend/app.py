@@ -101,8 +101,8 @@ def get_contracts_from_scan(url):
 
     number_of_pages = documentObjectModel.xpath('//*[@id="ctl00"]/div[3]/ul/li[3]/span/strong[2]')[0].text
 
-    for i in range(1, int(number_of_pages)+1):
-        url = f"https://etherscan.io/contractsVerified/{i}?ps=100"
+    for i in range(0, int(number_of_pages)):
+        url = url.replace(f"{i}?ps=100", f"{i+1}?ps=100")
         r = requests.get(url,headers=headers)
         soup = BeautifulSoup(r.content, "html.parser")
         documentObjectModel = etree.HTML(str(soup)) 
