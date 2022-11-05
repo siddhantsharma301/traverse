@@ -1,1 +1,3 @@
 node_modules
+0x*.json
+crytic-export/
