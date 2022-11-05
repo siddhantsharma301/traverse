@@ -97,19 +97,29 @@
 .card:active {
   color: #0070f3;
   border-color: #0070f3;
+  background-color: black;
 }
 
 .card h2 {
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
-  color: black;
 }
 
 .card p {
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.5;
-  color: black;
+}
+.card:hover,
+.card:focus,
+.card:active h2 {
+  color: white;
+}
+
+.card:hover,
+.card:focus,
+.card:active p {
+  color: white;
 }
 
 .logo {
