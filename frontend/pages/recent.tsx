@@ -50,7 +50,7 @@ export default function Home({ data }: Props) {
                         data.map((contract) => (
                             <Link href={`contracts/${contract.address}`} className={styles.card_recent}>
                                 <Image src={`/${contract.chain}.png`} alt="Heart Logo" width={30} height={30} />
-                                <h2 className={styles.contract_name}>Contract Name: {contract.name}</h2>
+                                <h2 className={styles.contract_name}>{contract.name}</h2>
                                 <p>Address: {contract.address}</p>
                             </Link>
                         ))

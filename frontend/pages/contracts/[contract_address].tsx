@@ -26,7 +26,7 @@ export default function Contracts() {
   
         <main className={styles.main}>
           <h1 className={styles.title_recent}>
-            Contract: {contract_address}
+            Contract Address: {contract_address}
           </h1>
   
   
