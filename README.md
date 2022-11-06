@@ -4,7 +4,7 @@
 
 Our project generates security reports for contracts deployed on Ethereum, Optimism, and Polygon Mainnet. This is a public good since it can greatly help developers to identify and fix vulnerabilities, and help users verify the security of smart contracts before using them.
 
-![image](https://user-images.githubusercontent.com/22297592/200182996-6239d6ca-ae35-4007-9771-b4713aeaebc0.png)
+![covertraverse](https://user-images.githubusercontent.com/22297592/200183113-6a2bf11f-5bfb-40d9-bf63-630a69c8b683.png)
 
 ### Screenshots of our project:
 
