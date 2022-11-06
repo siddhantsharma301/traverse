@@ -14,6 +14,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Tenderly from '../../components/Tenderly';
 
 function createData(number: any, item: any, qty: any, price: any) {
     return { number, item, qty, price };
@@ -83,6 +84,8 @@ export default function Contracts() {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                {/* TODO: get chain ID of contract and all functions from abi */}
+                <Tenderly address={contract_address as string} chain_id={1} functions={[]}/>
 
             </main>
         </div>
