@@ -15,7 +15,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Tenderly from '../../components/Tenderly';
 
 import { Web3Storage } from "web3.storage";
 import * as dotenv from "dotenv";
@@ -45,12 +44,12 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
 
     const upvoteIncrease = async (response: any) => {
         setUpvotes(upvotes_number + 1)
-        const upvoteRes = await axios.post(`http://localhost:3000/upvote?contractAddr=${contract_address}`)
+        const upvoteRes = await axios.post( process.env.API_URL +`/upvote?contractAddr=${contract_address}`)
     }
 
     const downvoteIncrease = async (response: any) => {
         setDownvotes(downvotes_number - 1)
-        const downvoteRes = await axios.post(`http://localhost:3000/downvote?contractAddr=${contract_address}`)
+        const downvoteRes = await axios.post(process.env.API_URL + `/downvote?contractAddr=${contract_address}`)
     }
 
 
@@ -137,8 +136,6 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    {/* TODO: get chain ID of contract and all functions from abi */}
-                    <Tenderly address={contract_address as string} chain_id={1} functions={[]} />
 
                 </main>
             </div>
@@ -150,14 +147,14 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
 export const getServerSideProps = async (context: any) => {
     const { contract_address } = context.params;
 
-    const upvoteRes = await axios.get(`http://localhost:3000/get_upvotes?contractAddr=${contract_address}`)
+    const upvoteRes = await axios.get(process.env.API_URL +`/get_upvotes?contractAddr=${contract_address}`)
     const { upvotes } = await upvoteRes.data
 
-    const downvoteRes = await axios.get(`http://localhost:3000/get_downvotes?contractAddr=${contract_address}`)
+    const downvoteRes = await axios.get(process.env.API_URL  +`/get_downvotes?contractAddr=${contract_address}`)
     const { downvotes } = await downvoteRes.data
 
 
-    const scannerRes = await axios.get(`http://127.0.0.1:3000/test?contractAddr=${contract_address}`)
+    const scannerRes = await axios.get(process.env.API_URL + `/test?contractAddr=${contract_address}`)
     // @ts-ignore
     const { cid } = await scannerRes.data
     // @ts-ignore
