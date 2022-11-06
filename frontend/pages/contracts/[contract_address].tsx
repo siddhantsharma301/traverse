@@ -5,8 +5,8 @@ import { useState } from "react"
 import { WidgetProps } from '@worldcoin/id'
 import dynamic from "next/dynamic";
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../../styles/Home.module.css'
+import MuiMarkdown from "mui-markdown";
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -15,6 +15,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Tenderly from '../../components/Tenderly';
 
 import { Web3Storage } from "web3.storage";
 import * as dotenv from "dotenv";
@@ -22,21 +23,6 @@ import * as dotenv from "dotenv";
 function createData(number: any, item: any, qty: any, price: any) {
     return { number, item, qty, price };
 }
-
-interface Props {
-    upvotes: number,
-    downvotes: number
-}
-
-
-const rows = [
-    createData(1, "Apple", 5, 3),
-    createData(2, "Orange", 2, 2),
-    createData(3, "Grapes", 3, 1),
-    createData(4, "Tomato", 2, 1.6),
-    createData(5, "Mango", 1.5, 4)
-];
-
 
 const WorldIDWidget = dynamic<WidgetProps>(
     () => import('@worldcoin/id').then((mod) => mod.WorldIDWidget),
@@ -142,16 +128,18 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
                                         {row.impact}
                                     </TableCell>
                                     <TableCell className={styles.table_cell} align="center">{row.confidence}</TableCell>
-                                    <TableCell className={styles.table_cell} align="left">{row.description}</TableCell>
+                                    <TableCell className={styles.table_cell} align="left"><MuiMarkdown>{row.description}</MuiMarkdown></TableCell>
                                     <TableCell className={styles.table_cell} align="center">{row.check}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
+                {/* TODO: get chain ID of contract and all functions from abi */}
+                <Tenderly address={contractAddress as string} chain_id={1} functions={[]}/>
+
             </main>
         </div>
-
     )
 }
 
@@ -186,10 +174,10 @@ export const getServerSideProps = async (context: any) => {
 
     const rows: any[] = [];
     var counter = 0;
-    detections.forEach((detection: any) => {
+    detections.forEach(async (detection: any) => {
         const obj = {
             counter: counter,
-            description: detection.description,
+            description: detection.markdown,
             impact: detection.impact,
             confidence: detection.confidence,
             check: detection.check,

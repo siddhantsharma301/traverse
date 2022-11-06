@@ -269,7 +269,7 @@
 }
 
 .table {
-  background-color: #f5f5f5;
+  background-color: #DBE5EB;
   color: white;
 }
 
@@ -286,6 +286,7 @@
 .table_cell {
   border: #121212;
   color: white;
+  max-width: 500px;
 }
 
 .logo {
