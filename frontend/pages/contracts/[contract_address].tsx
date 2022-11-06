@@ -40,8 +40,6 @@ export default function Contracts({stats}:{stats:any}) {
     const router = useRouter()
     const { contractAddress } = router.query
 
-    // console.log(stats)
-
     return (
         <div className={styles.container}>
             <Head>
@@ -92,27 +90,26 @@ export default function Contracts({stats}:{stats:any}) {
                     <Table className={styles.table} aria-label="simple table">
                         <TableHead className={styles.table_head}>
                             <TableRow className={styles.table_row} >
-                                <TableCell className={styles.table_cell}>Impact</TableCell>
+                                <TableCell className={styles.table_cell} align="center">Impact</TableCell>
                                 <TableCell className={styles.table_cell} align="right">Confidence</TableCell>
-                                <TableCell className={styles.table_cell} align="right">Description</TableCell>
-                                <TableCell className={styles.table_cell} align="right">Check</TableCell>
+                                <TableCell className={styles.table_cell} align="left">Description</TableCell>
+                                <TableCell className={styles.table_cell} align="center">Check</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <TableRow className={styles.table_row} key={row.number}>
-                                    <TableCell className={styles.table_cell} component="th" scope="row">
-                                        {row.number}
+                            {stats.map((row: any) => (
+                                <TableRow className={styles.table_row} key={row.counter}>
+                                    <TableCell className={styles.table_cell} component="th" scope="row" align="center">
+                                        {row.impact}
                                     </TableCell>
-                                    <TableCell className={styles.table_cell} align="right">{row.item}</TableCell>
-                                    <TableCell className={styles.table_cell} align="right">{row.qty}</TableCell>
-                                    <TableCell className={styles.table_cell} align="right">{row.price}</TableCell>
+                                    <TableCell className={styles.table_cell} align="center">{row.confidence}</TableCell>
+                                    <TableCell className={styles.table_cell} align="left">{row.description}</TableCell>
+                                    <TableCell className={styles.table_cell} align="center">{row.check}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
-
             </main>
         </div>
 
@@ -139,14 +136,17 @@ export const getServerSideProps = async (context: any) => {
     const detections = data.results.detectors;
 
     const rows: any[] = [];
+    var counter = 0;
     detections.forEach((detection: any) => {
         const obj = {
+            counter: counter,
             description: detection.description,
             impact: detection.impact,
             confidence: detection.confidence,
             check: detection.check,
         }
         rows.push(obj);
+        counter++;
     });
 
     return { props: { stats: rows } };
