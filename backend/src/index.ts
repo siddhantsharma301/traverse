@@ -125,9 +125,20 @@ app.get(
     contract_master_list = contract_master_list.concat(polygon_contract_list);
     contract_master_list = contract_master_list.concat(optimistic_contract_list);
 
+    shuffleArray(contract_master_list);
+
     return res.status(200).json(contract_master_list);
   }
 );
+
+function shuffleArray(array: any[]) {
+  for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+  }
+}
 
 app.listen(3000, () => {
   console.log("Server running on port 3000");
