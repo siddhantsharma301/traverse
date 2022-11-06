@@ -16,6 +16,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
+import { Web3Storage } from "web3.storage";
+import * as dotenv from "dotenv";
+
 function createData(number: any, item: any, qty: any, price: any) {
     return { number, item, qty, price };
 }
@@ -40,7 +43,7 @@ const WorldIDWidget = dynamic<WidgetProps>(
     { ssr: false }
 )
 
-export default function Contracts({ upvotes, downvotes }: Props) {
+export default function Contracts({stats}:{stats:any}) {
     const router = useRouter()
     const { contract_address } = router.query
 
@@ -65,7 +68,6 @@ export default function Contracts({ upvotes, downvotes }: Props) {
                 <h1 className={styles.title_recent}>
                     Security Report
                 </h1>
-                <h3 className={styles.address}>{contract_address}</h3>
 
 
                 <WorldIDWidget
@@ -85,7 +87,7 @@ export default function Contracts({ upvotes, downvotes }: Props) {
                 <h3 className={styles.address}>Upvotes: {upvotes}</h3>
                 <h3 className={styles.address}>Downvotes: {downvotes}</h3>
 
-                <TableContainer className={styles.table_container} component={Paper}>
+                {/* <TableContainer className={styles.table_container} component={Paper}>
                     <Table className={styles.table} aria-label="simple table">
                         <TableHead className={styles.table_head}>
                             <TableRow className={styles.table_row} >
@@ -108,32 +110,34 @@ export default function Contracts({ upvotes, downvotes }: Props) {
                             ))}
                         </TableBody>
                     </Table>
+                </TableContainer> */}
+                <TableContainer className={styles.table_container} component={Paper}>
+                    <Table className={styles.table} aria-label="simple table">
+                        <TableHead className={styles.table_head}>
+                            <TableRow className={styles.table_row} >
+                                <TableCell className={styles.table_cell}>Impact</TableCell>
+                                <TableCell className={styles.table_cell} align="right">Confidence</TableCell>
+                                <TableCell className={styles.table_cell} align="right">Description</TableCell>
+                                <TableCell className={styles.table_cell} align="right">Check</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row) => (
+                                <TableRow className={styles.table_row} key={row.number}>
+                                    <TableCell className={styles.table_cell} component="th" scope="row">
+                                        {row.number}
+                                    </TableCell>
+                                    <TableCell className={styles.table_cell} align="right">{row.item}</TableCell>
+                                    <TableCell className={styles.table_cell} align="right">{row.qty}</TableCell>
+                                    <TableCell className={styles.table_cell} align="right">{row.price}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </TableContainer>
 
             </main>
         </div>
 
     )
-}
-
-export async function getServerSideProps(context) {
-
-    const { contract_address } = context.query
-
-    // Fetch data from external API
-    const res = await axios.get(`http://localhost:3000/get_upvotes?contractAddr=${contract_address}`)
-
-    const upvotes = await res.data
-
-    console.log("upvotes", upvotes)
-
-    // Fetch data from external API
-    const res_downvotes = await axios.get(`http://localhost:3000/get_downvotes?contractAddr=${contract_address}`)
-
-    const downvotes = await res_downvotes.data
-
-    console.log("downvotes", downvotes)
-
-    // Pass data to the page via props
-    return { props: { upvotes, downvotes } }
 }
