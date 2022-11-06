@@ -10,7 +10,7 @@ import xpath from "xpath";
 
 dotenv.config();
 
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 var contractAddrToCID = new Map<string, any>();
 
 var contractAddrToUpvotes = new Map<string, number>();
@@ -21,6 +21,10 @@ const storageClient = new Web3Storage({ token: process.env.WEB3STORAGE_TOKEN });
 
 const app: express.Express = express();
 app.use(cors());
+
+app.get("/", async (req: express.Request, res: express.Response) => {
+  res.send(200).json({ message: "Hello World!" });
+});
 
 const get_contracts_from_scan = async (url: string) => {
   let chain = "";
@@ -81,42 +85,55 @@ const get_contracts_from_scan = async (url: string) => {
   }
 };
 
-app.post("/upvote", async (req: express.Request, res:express.Response) => {
+app.post("/upvote", async (req: express.Request, res: express.Response) => {
   const contractAddr = String(req.query.contractAddr);
   if (contractAddrToUpvotes.has(contractAddr)) {
-    contractAddrToUpvotes.set(contractAddr, Number(contractAddrToUpvotes.get(contractAddr)) + 1);
+    contractAddrToUpvotes.set(
+      contractAddr,
+      Number(contractAddrToUpvotes.get(contractAddr)) + 1
+    );
   } else {
     contractAddrToUpvotes.set(contractAddr, 1);
   }
-})
+});
 
-app.post("/downvote", async (req: express.Request, res:express.Response) => {
+app.post("/downvote", async (req: express.Request, res: express.Response) => {
   const contractAddr = String(req.query.contractAddr);
   if (contractAddrToDownvotes.has(contractAddr)) {
-    contractAddrToDownvotes.set(contractAddr, Number(contractAddrToDownvotes.get(contractAddr)) - 1);
+    contractAddrToDownvotes.set(
+      contractAddr,
+      Number(contractAddrToDownvotes.get(contractAddr)) - 1
+    );
   } else {
     contractAddrToDownvotes.set(contractAddr, -1);
   }
-})
+});
 
-app.get("/get_upvotes", async (req: express.Request, res:express.Response) => {
+app.get("/get_upvotes", async (req: express.Request, res: express.Response) => {
   const contractAddr = req.query.contractAddr as string;
-  
-  if (contractAddrToUpvotes.has(contractAddr)) {
-    return res.status(200).json({upvotes: contractAddrToUpvotes.get(contractAddr)})
-  } else {
-    return res.status(200).json({upvotes:0});
-  }
-})
 
-app.get("/get_downvotes", async (req: express.Request, res:express.Response) => {
-  const contractAddr = String(req.query.contractAddr);
-  if (contractAddrToDownvotes.has(contractAddr)) {
-    return res.status(200).json({downvotes: contractAddrToDownvotes.get(contractAddr)});
+  if (contractAddrToUpvotes.has(contractAddr)) {
+    return res
+      .status(200)
+      .json({ upvotes: contractAddrToUpvotes.get(contractAddr) });
   } else {
-    return res.status(200).json({downvotes:0});
+    return res.status(200).json({ upvotes: 0 });
   }
-})
+});
+
+app.get(
+  "/get_downvotes",
+  async (req: express.Request, res: express.Response) => {
+    const contractAddr = String(req.query.contractAddr);
+    if (contractAddrToDownvotes.has(contractAddr)) {
+      return res
+        .status(200)
+        .json({ downvotes: contractAddrToDownvotes.get(contractAddr) });
+    } else {
+      return res.status(200).json({ downvotes: 0 });
+    }
+  }
+);
 
 app.get("/test", async (req: express.Request, res: express.Response) => {
   const contractAddr = req.query.contractAddr;
@@ -127,12 +144,12 @@ app.get("/test", async (req: express.Request, res: express.Response) => {
   try {
     exec(`slither ${contractAddr} --json ${contractAddr}.json`);
   } catch (error) {
-    return res.status(500).json({ error: error })
+    return res.status(500).json({ error: error });
   }
 
   await delay(5000);
 
-  const file = await getFilesFromPath(`${contractAddr}.json`)
+  const file = await getFilesFromPath(`${contractAddr}.json`);
   const cid = await storageClient.put(file);
   contractAddrToCID.set(contractAddr as string, cid);
   return res.status(200).json({ cid: cid });
@@ -157,7 +174,9 @@ app.get(
 
     contract_master_list = contract_master_list.concat(eth_contract_list);
     contract_master_list = contract_master_list.concat(polygon_contract_list);
-    contract_master_list = contract_master_list.concat(optimistic_contract_list);
+    contract_master_list = contract_master_list.concat(
+      optimistic_contract_list
+    );
 
     shuffleArray(contract_master_list);
 
@@ -167,10 +186,10 @@ app.get(
 
 function shuffleArray(array: any[]) {
   for (var i = array.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
   }
 }
 
