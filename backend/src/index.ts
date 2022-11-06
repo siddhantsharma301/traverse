@@ -66,11 +66,6 @@ const get_contracts_from_scan = async (url: string) => {
       .toString()
       .split(",");
 
-    console.log(contract_names);
-
-    console.log(contract_addresses.length);
-    console.log(contract_names.length);
-
     for (let i = 0; i < contract_addresses.length; i++) {
       contract_list.push({
         chain: chain,
@@ -85,7 +80,6 @@ const get_contracts_from_scan = async (url: string) => {
 
 app.get("/test", async (req: express.Request, res: express.Response) => {
   const contractAddr = req.query.contractAddr;
-  console.log(contractAddrToCID);
   if (contractAddrToCID.has(contractAddr as string)) {
     const cid = contractAddrToCID.get(contractAddr as string);
     return res.status(200).json({ cid: cid });
