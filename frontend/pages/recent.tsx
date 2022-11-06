@@ -11,22 +11,6 @@ const WorldIDWidget = dynamic<WidgetProps>(
     { ssr: false }
 )
 
-// const data = [
-//     {
-//         "address": "0x0020213",
-//     },
-//     {
-//         "address": "0x123456789",
-//     },
-//     {
-//         "address": "0x0987654321",
-//     },
-//     {
-//         "address": "0xqwert67890",
-//     }
-
-// ]
-
 interface Props {
     data: any[]
 }
@@ -79,7 +63,6 @@ export async function getServerSideProps() {
     // Fetch data from external API
     const res = await fetch(`http://localhost:3000/top_contracts`)
     const data = await res.json()
-    console.log(data)
 
     // Pass data to the page via props
     return { props: { data } }

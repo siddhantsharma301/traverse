@@ -78,7 +78,7 @@ export default function Contracts({stats}:{stats:any}) {
                     </Table>
                 </TableContainer>
                 {/* TODO: get chain ID of contract and all functions from abi */}
-                <Tenderly address={contract_address as string} chain_id={1} functions={[]}/>
+                <Tenderly address={contractAddress as string} chain_id={1} functions={[]}/>
 
             </main>
         </div>
@@ -87,7 +87,6 @@ export default function Contracts({stats}:{stats:any}) {
 
 export const getServerSideProps = async (context: any) => {
     const { contract_address } = context.params;
-    console.log(contract_address)
     const scannerRes = await axios.get(`http://127.0.0.1:3000/test?contractAddr=${contract_address}`)
     // @ts-ignore
     const { cid } = scannerRes.data
