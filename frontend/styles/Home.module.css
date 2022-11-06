@@ -89,7 +89,7 @@
   margin: 1rem;
   padding: 1.5rem;
   text-align: left;
-  color: inherit;
+  color: black;
   text-decoration: none;
   border: 1px solid #eaeaea;
   border-radius: 10px;
@@ -102,7 +102,7 @@
   margin: 1rem;
   padding: 1rem;
   text-align: left;
-  color: inherit;
+  color: black;
   text-decoration: none;
   border: 1px solid #eaeaea;
   border-radius: 10px;
@@ -112,13 +112,44 @@
   background-color: white;
 }
 
+.card_recent:hover,
+.card_recent:focus,
+.card_recent:active {
+  color: #0070f3;
+  border-color: #0070f3;
+  background-color: #121212;
+}
+
+.card_recent h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.card_recent p {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+.card_recent:hover,
+.card_recent:focus,
+.card_recent:active h2 {
+  color: white;
+}
+
+.card_recent:hover,
+.card_recent:focus,
+.card_recent:active p {
+  color: white;
+}
+
+
 
 .card:hover,
 .card:focus,
 .card:active {
   color: #0070f3;
   border-color: #0070f3;
-  background-color: black;
+  background-color: #121212;
 }
 
 .card h2 {
@@ -146,6 +177,30 @@
 .card:hover,
 .card:focus,
 .card:active p {
+  color: white;
+}
+
+.table_container {
+  margin-top: 4rem;
+}
+
+.table {
+  background-color: #f5f5f5;
+  color: white;
+}
+
+.table_head {
+  background-color: #edebeb;
+  color: #eaeaea;
+}
+
+.table_row {
+  border: #121212;
+  color: white;
+}
+
+.table_cell {
+  border: #121212;
   color: white;
 }
 

@@ -34,7 +34,7 @@ export default function Home() {
             <p>View recently generated security reports on contracts.</p>
           </a>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
+          <a href="/generate" className={styles.card}>
             <h2>Generate a New Report &rarr;</h2>
             <p>Verify the security of your contract and detect common bugs.</p>
           </a>
