@@ -13,6 +13,9 @@ dotenv.config();
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 var contractAddrToCID = new Map<string, any>();
 
+var contractAddrToUpvotes = new Map<string, number>();
+var contractAddrToDownvotes = new Map<string, number>();
+
 // @ts-ignore
 const storageClient = new Web3Storage({ token: process.env.WEB3STORAGE_TOKEN });
 
@@ -82,6 +85,42 @@ const get_contracts_from_scan = async (url: string) => {
     return contract_list;
   }
 };
+
+app.post("/upvote", async (req: express.Request, res:express.Response) => {
+  const contractAddr = String(req.query.contractAddr);
+  if (contractAddrToUpvotes.has(contractAddr)) {
+    contractAddrToUpvotes.set(contractAddr, Number(contractAddrToUpvotes.get(contractAddr)) + 1);
+  } else {
+    contractAddrToUpvotes.set(contractAddr, 1);
+  }
+})
+
+app.post("/downvote", async (req: express.Request, res:express.Response) => {
+  const contractAddr = String(req.query.contractAddr);
+  if (contractAddrToDownvotes.has(contractAddr)) {
+    contractAddrToDownvotes.set(contractAddr, Number(contractAddrToDownvotes.get(contractAddr)) - 1);
+  } else {
+    contractAddrToDownvotes.set(contractAddr, -1);
+  }
+})
+
+app.get("/get_upvotes", async (req: express.Request, res:express.Response) => {
+  const contractAddr = String(req.query.contractAddr);
+  if (contractAddrToUpvotes.has(contractAddr)) {
+    return contractAddrToUpvotes.get(contractAddr);
+  } else {
+    return 0;
+  }
+})
+
+app.get("/get_downvotes", async (req: express.Request, res:express.Response) => {
+  const contractAddr = String(req.query.contractAddr);
+  if (contractAddrToDownvotes.has(contractAddr)) {
+    return contractAddrToDownvotes.get(contractAddr);
+  } else {
+    return 0;
+  }
+})
 
 app.get("/test", async (req: express.Request, res: express.Response) => {
   const contractAddr = req.query.contractAddr;
