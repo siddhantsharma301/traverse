@@ -43,16 +43,30 @@ const WorldIDWidget = dynamic<WidgetProps>(
     { ssr: false }
 )
 
-export default function Contracts({stats}:{stats:any}) {
+export default function Contracts({ stats, upvotes, downvotes }: { stats: any, upvotes: number, downvotes: number }) {
     const router = useRouter()
     const { contract_address } = router.query
 
     const [isHuman, setIsHuman] = useState(false)
+    const [upvotes_number, setUpvotes] = useState(upvotes)
+    const [downvotes_number, setDownvotes] = useState(downvotes)
+
 
     const proveHumanity = async (response: any) => {
         console.debug(response)
         setIsHuman(true)
     }
+
+    const upvoteIncrease = async (response: any) => {
+        setUpvotes(upvotes_number + 1)
+        const upvoteRes = await axios.post(`http://localhost:3000/upvote?contractAddr=${contract_address}`)
+    }
+
+    const downvoteIncrease = async (response: any) => {
+        setDownvotes(downvotes_number - 1)
+        const downvoteRes = await axios.post(`http://localhost:3000/downvote?contractAddr=${contract_address}`)
+    } 
+
 
 
     return (
@@ -67,9 +81,10 @@ export default function Contracts({stats}:{stats:any}) {
                 <h1 className={styles.title_recent}>
                     Security Report
                 </h1>
+                <h3 className={styles.address}>Contract Address: {contract_address}</h3>
 
 
-                <WorldIDWidget
+                <WorldIDWidget 
                     actionId="wid_staging_69e75b2d27bd76510d5752a719fde7e8" // obtain this from developer.worldcoin.org
                     signal="my_signal"
                     enableTelemetry
@@ -79,12 +94,12 @@ export default function Contracts({stats}:{stats:any}) {
                 />
 
                 <div className={styles.votes}>
-                    <button className={styles.upvote} disabled={!isHuman}>{(isHuman) ? "Upvote" : "Verify with WorldID to Upvote"}</button>
-                    <button className={styles.downvote} disabled={!isHuman}>{(isHuman) ? "Downvote" : "Verify with WorldID to Downvote"}</button>
+                    <button className={styles.upvote} onClick={upvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Upvote" : "Verify with WorldID to Upvote"}</button>
+                    <button className={styles.downvote} onClick={downvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Downvote" : "Verify with WorldID to Downvote"}</button>
                 </div>
 
-                <h3 className={styles.address}>Upvotes: {upvotes}</h3>
-                <h3 className={styles.address}>Downvotes: {downvotes}</h3>
+                <h4 className={styles.vote_title}>Upvotes: {upvotes_number}</h4>
+                <h4 className={styles.vote_title}>Downvotes: {downvotes_number}</h4>
 
                 {/* <TableContainer className={styles.table_container} component={Paper}>
                     <Table className={styles.table} aria-label="simple table">
@@ -142,10 +157,20 @@ export default function Contracts({stats}:{stats:any}) {
 
 export const getServerSideProps = async (context: any) => {
     const { contract_address } = context.params;
-    console.log(contract_address)
+    console.log("CONTRACT",contract_address)
+
+    const upvoteRes = await axios.get(`http://localhost:3000/get_upvotes?contractAddr=${contract_address}`)
+
+    const { upvotes } = await upvoteRes.data
+
+    const downvoteRes = await axios.get(`http://localhost:3000/get_downvotes?contractAddr=${contract_address}`)
+
+    const { downvotes } = await downvoteRes.data
+
+    
     const scannerRes = await axios.get(`http://127.0.0.1:3000/test?contractAddr=${contract_address}`)
     // @ts-ignore
-    const { cid } = scannerRes.data
+    const { cid } = await scannerRes.data
     // @ts-ignore
     const client = new Web3Storage({ token: process.env.WEB3STORAGE_TOKEN });
     const response = await client.get(cid);
@@ -173,5 +198,5 @@ export const getServerSideProps = async (context: any) => {
         counter++;
     });
 
-    return { props: { stats: rows } };
+    return { props: { stats: rows, upvotes: upvotes, downvotes: downvotes } };
 }

@@ -69,11 +69,6 @@ const get_contracts_from_scan = async (url: string) => {
       .toString()
       .split(",");
 
-    console.log(contract_names);
-
-    console.log(contract_addresses.length);
-    console.log(contract_names.length);
-
     for (let i = 0; i < contract_addresses.length; i++) {
       contract_list.push({
         chain: chain,
@@ -105,26 +100,26 @@ app.post("/downvote", async (req: express.Request, res:express.Response) => {
 })
 
 app.get("/get_upvotes", async (req: express.Request, res:express.Response) => {
-  const contractAddr = String(req.query.contractAddr);
+  const contractAddr = req.query.contractAddr as string;
+  
   if (contractAddrToUpvotes.has(contractAddr)) {
-    return contractAddrToUpvotes.get(contractAddr);
+    return res.status(200).json({upvotes: contractAddrToUpvotes.get(contractAddr)})
   } else {
-    return 0;
+    return res.status(200).json({upvotes:0});
   }
 })
 
 app.get("/get_downvotes", async (req: express.Request, res:express.Response) => {
   const contractAddr = String(req.query.contractAddr);
   if (contractAddrToDownvotes.has(contractAddr)) {
-    return contractAddrToDownvotes.get(contractAddr);
+    return res.status(200).json({downvotes: contractAddrToDownvotes.get(contractAddr)});
   } else {
-    return 0;
+    return res.status(200).json({downvotes:0});
   }
 })
 
 app.get("/test", async (req: express.Request, res: express.Response) => {
   const contractAddr = req.query.contractAddr;
-  console.log(contractAddrToCID);
   if (contractAddrToCID.has(contractAddr as string)) {
     const cid = contractAddrToCID.get(contractAddr as string);
     return res.status(200).json({ cid: cid });
