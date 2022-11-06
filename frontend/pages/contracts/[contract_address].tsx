@@ -64,7 +64,7 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
             </Head>
 
             <main className={styles.main}>
-                <h1 className={styles.title}>
+                <h1 className={styles.title_recent}>
                     Contract Address: {contract_address}
                 </h1>
                 <h1 className={styles.title_recent}>
@@ -83,7 +83,7 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
                 </Head>
 
                 <main className={styles.main}>
-                    <h1 className={styles.title}>
+                    <h1 className={styles.title_recent}>
                         Contract Address: {contract_address}
                     </h1>
 
@@ -95,6 +95,12 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
                         onError={(error) => console.error(error)}
                         debug={true} // to aid with debugging, remove in production
                     />
+                    <div className={styles.votes}>
+                        <button className={styles.upvote} onClick={upvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Upvote" : "Verify with WorldID to Upvote"}</button>
+                        <button className={styles.downvote} onClick={downvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Downvote" : "Verify with WorldID to Downvote"}</button>
+                    </div>
+                    <h4 className={styles.vote_title}>Upvotes: {upvotes_number}</h4>
+                    <h4 className={styles.vote_title}>Downvotes: {downvotes_number}</h4>
                     <TableContainer className={styles.table_container} component={Paper}>
                         <Table className={styles.table} aria-label="simple table">
                             <TableHead className={styles.table_head}>
@@ -131,14 +137,11 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
 
 export const getServerSideProps = async (context: any) => {
     const { contract_address } = context.params;
-    console.log("CONTRACT",contract_address)
 
     const upvoteRes = await axios.get(`http://localhost:3000/get_upvotes?contractAddr=${contract_address}`)
-
     const { upvotes } = await upvoteRes.data
 
     const downvoteRes = await axios.get(`http://localhost:3000/get_downvotes?contractAddr=${contract_address}`)
-
     const { downvotes } = await downvoteRes.data
 
     
