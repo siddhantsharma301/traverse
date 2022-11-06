@@ -62,7 +62,7 @@ export default function Contracts() {
                 <TableContainer className={styles.table_container} component={Paper}>
                     <Table className={styles.table} aria-label="simple table">
                         <TableHead className={styles.table_head}>
-                            <TableRow className={styles.table_row}>
+                            <TableRow className={styles.table_row} >
                                 <TableCell className={styles.table_cell}>S.No</TableCell>
                                 <TableCell className={styles.table_cell} align="right">Item</TableCell>
                                 <TableCell className={styles.table_cell} align="right">Quantity&nbsp;(kg)</TableCell>
