@@ -105,7 +105,7 @@ export default function Tenderly({
       {functionArgs && functionArgs.length > 0 && (
         <div>
           {functionArgs.map((arg) => (
-            <div>
+            <div key={arg}>
               <div>{arg.name}</div>
               <input type="text"  />
             </div>

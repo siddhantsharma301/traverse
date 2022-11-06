@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import { WidgetProps } from '@worldcoin/id'
 import dynamic from "next/dynamic";
@@ -29,15 +30,15 @@ export default function Home() {
         </p>
 
         <div className={styles.grid}>
-          <a href="/recent" className={styles.card}>
+          <Link href="/recent" className={styles.card}>
             <h2>View Recent Contracts &rarr;</h2>
             <p>View security reports on recently published contracts.</p>
-          </a>
+          </Link>
 
-          <a href="/generate" className={styles.card}>
+          <Link href="/generate" className={styles.card}>
             <h2>Generate a New Report &rarr;</h2>
             <p>Verify the security of your contract and detect common bugs.</p>
-          </a>
+          </Link>
 
         </div>
 
@@ -45,7 +46,7 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
-        <a
+        <Link
           href=""
           target="_blank"
           rel="noopener noreferrer"
@@ -55,7 +56,7 @@ export default function Home() {
             <Image src="/heart.png" alt="Heart Logo" width={20} height={20} />
           </span>
           {' '}at ETHSF
-        </a>
+        </Link>
       </footer>
     </div>
   )

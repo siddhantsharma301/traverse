@@ -39,7 +39,7 @@ export default function Home({ data }: Props) {
                 <div className={styles.grid}>
                     {
                         data.map((contract) => (
-                            <Link href={`contracts/${contract.address}`} onClick={load} className={styles.card_recent}>
+                            <Link href={`contracts/${contract.address}`} onClick={load} className={styles.card_recent} key={contract}>
                                 <Image src={`/${contract.chain}.png`} alt="Heart Logo" width={30} height={30} />
                                 <h2 className={styles.contract_name}>{contract.name}</h2>
                                 <p>Address: {contract.address}</p>
@@ -50,7 +50,7 @@ export default function Home({ data }: Props) {
             </main>
 
             <footer className={styles.footer}>
-                <a
+                <Link
                     href=""
                     target="_blank"
                     rel="noopener noreferrer"
@@ -60,7 +60,7 @@ export default function Home({ data }: Props) {
                         <Image src="/heart.png" alt="Heart Logo" width={20} height={20} />
                     </span>
                     {' '}at ETHSF
-                </a>
+                </Link>
             </footer>
         </div>) :
         (
@@ -79,7 +79,7 @@ export default function Home({ data }: Props) {
             </main>
 
             <footer className={styles.footer}>
-                <a
+                <Link
                     href=""
                     target="_blank"
                     rel="noopener noreferrer"
@@ -89,7 +89,7 @@ export default function Home({ data }: Props) {
                         <Image src="/heart.png" alt="Heart Logo" width={20} height={20} />
                     </span>
                     {' '}at ETHSF
-                </a>
+                </Link>
             </footer>
         </div>
         )
