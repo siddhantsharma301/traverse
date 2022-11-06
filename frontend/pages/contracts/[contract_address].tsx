@@ -28,12 +28,12 @@ const WorldIDWidget = dynamic<WidgetProps>(
     { ssr: false }
 )
 
-export default function Contracts({stats}:{stats:any}) {
+export default function Contracts({ stats }: { stats: any }) {
     const router = useRouter()
     const { contractAddress } = router.query
 
-    return (
-        <div className={styles.container}>
+    if (stats.length == 0) {
+        return <div className={styles.container}>
             <Head>
                 <title>Traverse</title>
                 <meta name="description" content="Smart contract security report generator" />
@@ -41,48 +41,69 @@ export default function Contracts({stats}:{stats:any}) {
             </Head>
 
             <main className={styles.main}>
-                <h1 className={styles.title_recent}>
+                <h1 className={styles.title}>
                     Contract Address: {contractAddress}
                 </h1>
-
-                <WorldIDWidget
-                    actionId="wid_staging_69e75b2d27bd76510d5752a719fde7e8" // obtain this from developer.worldcoin.org
-                    signal="my_signal"
-                    enableTelemetry
-                    onSuccess={(verificationResponse) => console.log(verificationResponse)}
-                    onError={(error) => console.error(error)}
-                    debug={true} // to aid with debugging, remove in production
-                />
-                <TableContainer className={styles.table_container} component={Paper}>
-                    <Table className={styles.table} aria-label="simple table">
-                        <TableHead className={styles.table_head}>
-                            <TableRow className={styles.table_row} >
-                                <TableCell className={styles.table_cell} align="center">Impact</TableCell>
-                                <TableCell className={styles.table_cell} align="right">Confidence</TableCell>
-                                <TableCell className={styles.table_cell} align="left">Description</TableCell>
-                                <TableCell className={styles.table_cell} align="center">Check</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {stats.map((row: any) => (
-                                <TableRow className={styles.table_row} key={row.counter}>
-                                    <TableCell className={styles.table_cell} component="th" scope="row" align="center">
-                                        {row.impact}
-                                    </TableCell>
-                                    <TableCell className={styles.table_cell} align="center">{row.confidence}</TableCell>
-                                    <TableCell className={styles.table_cell} align="left"><MuiMarkdown>{row.description}</MuiMarkdown></TableCell>
-                                    <TableCell className={styles.table_cell} align="center">{row.check}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                {/* TODO: get chain ID of contract and all functions from abi */}
-                <Tenderly address={contractAddress as string} chain_id={1} functions={[]}/>
-
+                <h1 className={styles.title_recent}>
+                    No security vulnerabilities or suggestions found!
+                </h1>
             </main>
         </div>
-    )
+    }
+    else {
+        return (
+            <div className={styles.container}>
+                <Head>
+                    <title>Traverse</title>
+                    <meta name="description" content="Smart contract security report generator" />
+                    <link rel="icon" href="/favicon.png" />
+                </Head>
+
+                <main className={styles.main}>
+                    <h1 className={styles.title}>
+                        Contract Address: {contractAddress}
+                    </h1>
+
+                    <WorldIDWidget
+                        actionId="wid_staging_69e75b2d27bd76510d5752a719fde7e8" // obtain this from developer.worldcoin.org
+                        signal="my_signal"
+                        enableTelemetry
+                        onSuccess={(verificationResponse) => console.log(verificationResponse)}
+                        onError={(error) => console.error(error)}
+                        debug={true} // to aid with debugging, remove in production
+                    />
+                    <TableContainer className={styles.table_container} component={Paper}>
+                        <Table className={styles.table} aria-label="simple table">
+                            <TableHead className={styles.table_head}>
+                                <TableRow className={styles.table_row} >
+                                    <TableCell className={styles.table_cell} align="center">Impact</TableCell>
+                                    <TableCell className={styles.table_cell} align="right">Confidence</TableCell>
+                                    <TableCell className={styles.table_cell} align="left">Description</TableCell>
+                                    <TableCell className={styles.table_cell} align="center">Check</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {stats.map((row: any) => (
+                                    <TableRow className={styles.table_row} key={row.counter}>
+                                        <TableCell className={styles.table_cell} component="th" scope="row" align="center">
+                                            {row.impact}
+                                        </TableCell>
+                                        <TableCell className={styles.table_cell} align="center">{row.confidence}</TableCell>
+                                        <TableCell className={styles.table_cell} align="left"><MuiMarkdown>{row.description}</MuiMarkdown></TableCell>
+                                        <TableCell className={styles.table_cell} align="center">{row.check}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    {/* TODO: get chain ID of contract and all functions from abi */}
+                    <Tenderly address={contractAddress as string} chain_id={1} functions={[]} />
+
+                </main>
+            </div>
+        )
+    }
+
 }
 
 export const getServerSideProps = async (context: any) => {
@@ -105,6 +126,9 @@ export const getServerSideProps = async (context: any) => {
 
     const rows: any[] = [];
     var counter = 0;
+    if (detections == undefined || Object.keys(detections).length == 0) {
+        return { props: { stats: [] } }
+    }
     detections.forEach(async (detection: any) => {
         const obj = {
             counter: counter,
