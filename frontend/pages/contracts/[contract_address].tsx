@@ -55,8 +55,8 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
 
 
 
-    return (
-        <div className={styles.container}>
+    if (stats.length == 0) {
+        return <div className={styles.container}>
             <Head>
                 <title>Traverse</title>
                 <meta name="description" content="Smart contract security report generator" />
@@ -64,83 +64,69 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
             </Head>
 
             <main className={styles.main}>
-                <h1 className={styles.title_recent}>
-                    Security Report
+                <h1 className={styles.title}>
+                    Contract Address: {contract_address}
                 </h1>
-                <h3 className={styles.address}>Contract Address: {contract_address}</h3>
-
-
-                <WorldIDWidget 
-                    actionId="wid_staging_69e75b2d27bd76510d5752a719fde7e8" // obtain this from developer.worldcoin.org
-                    signal="my_signal"
-                    enableTelemetry
-                    onSuccess={(response) => proveHumanity(response)}
-                    onError={(error) => console.error(error)}
-                    debug={false} // to aid with debugging, remove in production
-                />
-
-                <div className={styles.votes}>
-                    <button className={styles.upvote} onClick={upvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Upvote" : "Verify with WorldID to Upvote"}</button>
-                    <button className={styles.downvote} onClick={downvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Downvote" : "Verify with WorldID to Downvote"}</button>
-                </div>
-
-                <h4 className={styles.vote_title}>Upvotes: {upvotes_number}</h4>
-                <h4 className={styles.vote_title}>Downvotes: {downvotes_number}</h4>
-
-                {/* <TableContainer className={styles.table_container} component={Paper}>
-                    <Table className={styles.table} aria-label="simple table">
-                        <TableHead className={styles.table_head}>
-                            <TableRow className={styles.table_row} >
-                                <TableCell className={styles.table_cell}>S.No</TableCell>
-                                <TableCell className={styles.table_cell} align="right">Item</TableCell>
-                                <TableCell className={styles.table_cell} align="right">Quantity&nbsp;(kg)</TableCell>
-                                <TableCell className={styles.table_cell} align="right">Price&nbsp;($)</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row) => (
-                                <TableRow className={styles.table_row} key={row.number}>
-                                    <TableCell className={styles.table_cell} component="th" scope="row">
-                                        {row.number}
-                                    </TableCell>
-                                    <TableCell className={styles.table_cell} align="right">{row.item}</TableCell>
-                                    <TableCell className={styles.table_cell} align="right">{row.qty}</TableCell>
-                                    <TableCell className={styles.table_cell} align="right">{row.price}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer> */}
-                <TableContainer className={styles.table_container} component={Paper}>
-                    <Table className={styles.table} aria-label="simple table">
-                        <TableHead className={styles.table_head}>
-                            <TableRow className={styles.table_row} >
-                                <TableCell className={styles.table_cell} align="center">Impact</TableCell>
-                                <TableCell className={styles.table_cell} align="right">Confidence</TableCell>
-                                <TableCell className={styles.table_cell} align="left">Description</TableCell>
-                                <TableCell className={styles.table_cell} align="center">Check</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {stats.map((row: any) => (
-                                <TableRow className={styles.table_row} key={row.counter}>
-                                    <TableCell className={styles.table_cell} component="th" scope="row" align="center">
-                                        {row.impact}
-                                    </TableCell>
-                                    <TableCell className={styles.table_cell} align="center">{row.confidence}</TableCell>
-                                    <TableCell className={styles.table_cell} align="left"><MuiMarkdown>{row.description}</MuiMarkdown></TableCell>
-                                    <TableCell className={styles.table_cell} align="center">{row.check}</TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                {/* TODO: get chain ID of contract and all functions from abi */}
-                <Tenderly address={contract_address as string} chain_id={1} functions={[]}/>
-
+                <h1 className={styles.title_recent}>
+                    No security vulnerabilities or suggestions found!
+                </h1>
             </main>
         </div>
-    )
+    }
+    else {
+        return (
+            <div className={styles.container}>
+                <Head>
+                    <title>Traverse</title>
+                    <meta name="description" content="Smart contract security report generator" />
+                    <link rel="icon" href="/favicon.png" />
+                </Head>
+
+                <main className={styles.main}>
+                    <h1 className={styles.title}>
+                        Contract Address: {contract_address}
+                    </h1>
+
+                    <WorldIDWidget
+                        actionId="wid_staging_69e75b2d27bd76510d5752a719fde7e8" // obtain this from developer.worldcoin.org
+                        signal="my_signal"
+                        enableTelemetry
+                        onSuccess={(verificationResponse) => console.log(verificationResponse)}
+                        onError={(error) => console.error(error)}
+                        debug={true} // to aid with debugging, remove in production
+                    />
+                    <TableContainer className={styles.table_container} component={Paper}>
+                        <Table className={styles.table} aria-label="simple table">
+                            <TableHead className={styles.table_head}>
+                                <TableRow className={styles.table_row} >
+                                    <TableCell className={styles.table_cell} align="center">Impact</TableCell>
+                                    <TableCell className={styles.table_cell} align="right">Confidence</TableCell>
+                                    <TableCell className={styles.table_cell} align="left">Description</TableCell>
+                                    <TableCell className={styles.table_cell} align="center">Check</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {stats.map((row: any) => (
+                                    <TableRow className={styles.table_row} key={row.counter}>
+                                        <TableCell className={styles.table_cell} component="th" scope="row" align="center">
+                                            {row.impact}
+                                        </TableCell>
+                                        <TableCell className={styles.table_cell} align="center">{row.confidence}</TableCell>
+                                        <TableCell className={styles.table_cell} align="left"><MuiMarkdown>{row.description}</MuiMarkdown></TableCell>
+                                        <TableCell className={styles.table_cell} align="center">{row.check}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    {/* TODO: get chain ID of contract and all functions from abi */}
+                    <Tenderly address={contract_address as string} chain_id={1} functions={[]} />
+
+                </main>
+            </div>
+        )
+    }
+
 }
 
 export const getServerSideProps = async (context: any) => {
@@ -174,6 +160,9 @@ export const getServerSideProps = async (context: any) => {
 
     const rows: any[] = [];
     var counter = 0;
+    if (Object.keys(detections).length == 0) {
+        return { props: { stats: [] } }
+    }
     detections.forEach(async (detection: any) => {
         const obj = {
             counter: counter,
