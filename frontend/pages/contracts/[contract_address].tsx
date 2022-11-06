@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import { useState } from "react"
 import { WidgetProps } from '@worldcoin/id'
 import dynamic from "next/dynamic";
 import Head from 'next/head'
@@ -28,9 +29,31 @@ const WorldIDWidget = dynamic<WidgetProps>(
     { ssr: false }
 )
 
-export default function Contracts({ stats }: { stats: any }) {
+export default function Contracts({ stats, upvotes, downvotes }: { stats: any, upvotes: number, downvotes: number }) {
     const router = useRouter()
-    const { contractAddress } = router.query
+    const { contract_address } = router.query
+
+    const [isHuman, setIsHuman] = useState(false)
+    const [upvotes_number, setUpvotes] = useState(upvotes)
+    const [downvotes_number, setDownvotes] = useState(downvotes)
+
+
+    const proveHumanity = async (response: any) => {
+        console.debug(response)
+        setIsHuman(true)
+    }
+
+    const upvoteIncrease = async (response: any) => {
+        setUpvotes(upvotes_number + 1)
+        const upvoteRes = await axios.post(`http://localhost:3000/upvote?contractAddr=${contract_address}`)
+    }
+
+    const downvoteIncrease = async (response: any) => {
+        setDownvotes(downvotes_number - 1)
+        const downvoteRes = await axios.post(`http://localhost:3000/downvote?contractAddr=${contract_address}`)
+    } 
+
+
 
     if (stats.length == 0) {
         return <div className={styles.container}>
@@ -42,7 +65,7 @@ export default function Contracts({ stats }: { stats: any }) {
 
             <main className={styles.main}>
                 <h1 className={styles.title}>
-                    Contract Address: {contractAddress}
+                    Contract Address: {contract_address}
                 </h1>
                 <h1 className={styles.title_recent}>
                     No security vulnerabilities or suggestions found!
@@ -61,7 +84,7 @@ export default function Contracts({ stats }: { stats: any }) {
 
                 <main className={styles.main}>
                     <h1 className={styles.title}>
-                        Contract Address: {contractAddress}
+                        Contract Address: {contract_address}
                     </h1>
 
                     <WorldIDWidget
@@ -97,7 +120,7 @@ export default function Contracts({ stats }: { stats: any }) {
                         </Table>
                     </TableContainer>
                     {/* TODO: get chain ID of contract and all functions from abi */}
-                    <Tenderly address={contractAddress as string} chain_id={1} functions={[]} />
+                    <Tenderly address={contract_address as string} chain_id={1} functions={[]} />
 
                 </main>
             </div>
@@ -108,9 +131,20 @@ export default function Contracts({ stats }: { stats: any }) {
 
 export const getServerSideProps = async (context: any) => {
     const { contract_address } = context.params;
+    console.log("CONTRACT",contract_address)
+
+    const upvoteRes = await axios.get(`http://localhost:3000/get_upvotes?contractAddr=${contract_address}`)
+
+    const { upvotes } = await upvoteRes.data
+
+    const downvoteRes = await axios.get(`http://localhost:3000/get_downvotes?contractAddr=${contract_address}`)
+
+    const { downvotes } = await downvoteRes.data
+
+    
     const scannerRes = await axios.get(`http://127.0.0.1:3000/test?contractAddr=${contract_address}`)
     // @ts-ignore
-    const { cid } = scannerRes.data
+    const { cid } = await scannerRes.data
     // @ts-ignore
     const client = new Web3Storage({ token: process.env.WEB3STORAGE_TOKEN });
     const response = await client.get(cid);
@@ -126,7 +160,7 @@ export const getServerSideProps = async (context: any) => {
 
     const rows: any[] = [];
     var counter = 0;
-    if (detections == undefined || Object.keys(detections).length == 0) {
+    if (Object.keys(detections).length == 0) {
         return { props: { stats: [] } }
     }
     detections.forEach(async (detection: any) => {
@@ -141,5 +175,5 @@ export const getServerSideProps = async (context: any) => {
         counter++;
     });
 
-    return { props: { stats: rows } };
+    return { props: { stats: rows, upvotes: upvotes, downvotes: downvotes } };
 }

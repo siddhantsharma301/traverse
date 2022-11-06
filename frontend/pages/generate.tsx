@@ -27,7 +27,7 @@ export default function Home({ data }: Props) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title_recent}>Generate Security Report</h1>
+        <h1 className={styles.generate_title}>Generate Security Report</h1>
 
         <input className={styles.text_box} type={"text"} placeholder="Insert Contract Address" value={input} onChange={(e)=>setInput(e.target.value)} style={{}}/>
         <Button variant="contained" onClick={(e) => router.push("/contracts/" + input)}>Submit</Button>

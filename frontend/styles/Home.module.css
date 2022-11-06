@@ -1,6 +1,6 @@
 .container {
   padding: 0 2rem;
-  background-image: url("https://images.unsplash.com/photo-1593371256584-ac70d0ab43d1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmxhY2slMjBzcGFjZXxlbnwwfHwwfHw%3D&w=1000&q=80");
+  background-color: #0d0d0d;
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
@@ -15,6 +15,54 @@
   justify-content: center;
   align-items: center;
 }
+
+.votes {
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.vote_title {
+  color:white;
+  margin-bottom: 1rem;
+}
+
+.upvote {
+  background-color: #0f8031;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 5%;
+  border: none;
+  margin-right: 1.5rem;
+}
+
+.upvote:hover,
+.upvote:focus,
+.upvote:active {
+  background-color: #242424;
+  color: white;
+}
+
+
+.downvote {
+  background-color: #a11612;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 5%;
+  border: none;
+}
+
+.downvote:hover,
+.downvote:focus,
+.downvote:active {
+  background-color: #242424;
+  color: white;
+}
+
+
 
 .footer {
   display: flex;
@@ -51,9 +99,20 @@
 }
 
 .title_recent {
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   font-size: 2rem;
   color: white;
+}
+
+.generate_title {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: white;
+}
+
+.address {
+  color:white;
+  margin-bottom: 2rem;
 }
 
 .title,
@@ -75,6 +134,31 @@
   font-size: 1.1rem;
   font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
     Bitstream Vera Sans Mono, Courier New, monospace;
+}
+
+.text_box {
+  width: 600px;
+  padding-left: 1rem;
+  padding-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
+
+.submit {
+  margin-top: 2rem;
+  padding-left: 1rem;
+  padding-top: 0.5rem;
+  padding-right: 1rem;
+  padding-bottom: 0.5rem;
+  background: #f5f5f5;
+  border: #f5f5f5;
+}
+
+.submit:hover,
+.submit:focus,
+.submit:active {
+  background: #242424;
+  color: white;
 }
 
 .grid {
