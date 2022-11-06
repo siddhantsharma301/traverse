@@ -51,7 +51,7 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
     const downvoteIncrease = async (response: any) => {
         setDownvotes(downvotes_number - 1)
         const downvoteRes = await axios.post(`http://localhost:3000/downvote?contractAddr=${contract_address}`)
-    } 
+    }
 
 
 
@@ -64,12 +64,20 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
             </Head>
 
             <main className={styles.main}>
-                <h1 className={styles.title}>
+                <h1 className={styles.title_recent}>
                     Contract Address: {contract_address}
                 </h1>
-                <h1 className={styles.title_recent}>
-                    No security vulnerabilities or suggestions found!
-                </h1>
+                <h4 className={styles.address}>Contract Address: {contract_address}</h4>
+                <h4 className={styles.address}>No security vulnerabilities or suggestions found!{contract_address}</h4>
+
+                <div className={styles.votes}>
+                    <button className={styles.upvote} onClick={upvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Upvote" : "Verify with WorldID to Upvote"}</button>
+                    <button className={styles.downvote} onClick={downvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Downvote" : "Verify with WorldID to Downvote"}</button>
+                </div>
+                <h4 className={styles.vote_title}>Upvotes: {upvotes_number}</h4>
+                <h4 className={styles.vote_title}>Downvotes: {downvotes_number}</h4>
+
+
             </main>
         </div>
     }
@@ -83,18 +91,28 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
                 </Head>
 
                 <main className={styles.main}>
-                    <h1 className={styles.title}>
-                        Contract Address: {contract_address}
+
+                    <h1 className={styles.title_recent}>
+                        View Security Report
                     </h1>
+                    <h4 className={styles.address}>Contract Address: {contract_address}</h4>
 
                     <WorldIDWidget
                         actionId="wid_staging_69e75b2d27bd76510d5752a719fde7e8" // obtain this from developer.worldcoin.org
                         signal="my_signal"
                         enableTelemetry
-                        onSuccess={(verificationResponse) => console.log(verificationResponse)}
-                        onError={(error) => console.error(error)}
-                        debug={true} // to aid with debugging, remove in production
+                        onSuccess={(response) => proveHumanity(response)}
+                        onError={(error) => console.error(error)}                
+                        debug={false} // to aid with debugging, remove in production
                     />
+
+                    <div className={styles.votes}>
+                        <button className={styles.upvote} onClick={upvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Upvote" : "Verify with WorldID to Upvote"}</button>
+                        <button className={styles.downvote} onClick={downvoteIncrease} disabled={!isHuman}>{(isHuman) ? "Downvote" : "Verify with WorldID to Downvote"}</button>
+                    </div>
+                    <h4 className={styles.vote_title}>Upvotes: {upvotes_number}</h4>
+                    <h4 className={styles.vote_title}>Downvotes: {downvotes_number}</h4>
+                    <h2 className={styles.table_header}>Vulnerabilities detected</h2>
                     <TableContainer className={styles.table_container} component={Paper}>
                         <Table className={styles.table} aria-label="simple table">
                             <TableHead className={styles.table_head}>
@@ -131,17 +149,14 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
 
 export const getServerSideProps = async (context: any) => {
     const { contract_address } = context.params;
-    console.log("CONTRACT",contract_address)
 
     const upvoteRes = await axios.get(`http://localhost:3000/get_upvotes?contractAddr=${contract_address}`)
-
     const { upvotes } = await upvoteRes.data
 
     const downvoteRes = await axios.get(`http://localhost:3000/get_downvotes?contractAddr=${contract_address}`)
-
     const { downvotes } = await downvoteRes.data
 
-    
+
     const scannerRes = await axios.get(`http://127.0.0.1:3000/test?contractAddr=${contract_address}`)
     // @ts-ignore
     const { cid } = await scannerRes.data

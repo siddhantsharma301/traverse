@@ -1,6 +1,5 @@
 import express from "express";
 import { exec } from "child_process";
-import util from "util";
 import cors from "cors";
 import { Web3Storage, getFilesFromPath } from "web3.storage";
 import * as dotenv from "dotenv";
@@ -191,6 +190,18 @@ function shuffleArray(array: any[]) {
     array[i] = array[j];
     array[j] = temp;
   }
+}
+
+function processString(input: any) {
+  let x = input.split("\\n")
+  console.log(x)
+  let y = ""
+  for(let i = 0; i < x.length; i++) {
+      if((!(x[i].includes("pragma")) && !(x[i].includes("import"))) || i <= 1){
+          y = y.concat(x[i])
+      }
+  }
+  return y
 }
 
 app.listen(3000, () => {

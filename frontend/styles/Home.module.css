@@ -30,6 +30,10 @@
   margin-bottom: 1rem;
 }
 
+.table_header {
+  color:white;
+}
+
 .upvote {
   background-color: #0f8031;
   color: white;
@@ -142,6 +146,7 @@
   padding-top: 1rem;
   padding-right: 1rem;
   padding-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .submit {
@@ -265,7 +270,7 @@
 }
 
 .table_container {
-  margin-top: 4rem;
+  margin-top: 1rem;
 }
 
 .table {
