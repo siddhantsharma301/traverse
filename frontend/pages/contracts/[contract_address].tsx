@@ -149,14 +149,11 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
 
 export const getServerSideProps = async (context: any) => {
     const { contract_address } = context.params;
-    console.log("CONTRACT", contract_address)
 
     const upvoteRes = await axios.get(`http://localhost:3000/get_upvotes?contractAddr=${contract_address}`)
-
     const { upvotes } = await upvoteRes.data
 
     const downvoteRes = await axios.get(`http://localhost:3000/get_downvotes?contractAddr=${contract_address}`)
-
     const { downvotes } = await downvoteRes.data
 
 
