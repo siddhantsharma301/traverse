@@ -1,6 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
+import { useState } from "react"
 import { WidgetProps } from '@worldcoin/id'
 import dynamic from "next/dynamic";
 import Head from 'next/head'
@@ -19,6 +20,12 @@ function createData(number: any, item: any, qty: any, price: any) {
     return { number, item, qty, price };
 }
 
+interface Props {
+    upvotes: number,
+    downvotes: number
+}
+
+
 const rows = [
     createData(1, "Apple", 5, 3),
     createData(2, "Orange", 2, 2),
@@ -33,9 +40,19 @@ const WorldIDWidget = dynamic<WidgetProps>(
     { ssr: false }
 )
 
-export default function Contracts() {
+export default function Contracts({ upvotes, downvotes }: Props) {
     const router = useRouter()
     const { contract_address } = router.query
+
+    const [isHuman, setIsHuman] = useState(false)
+
+    const proveHumanity = async (response: any) => {
+        console.debug(response)
+        setIsHuman(true)
+    }
+
+
+
     return (
         <div className={styles.container}>
             <Head>
@@ -46,18 +63,27 @@ export default function Contracts() {
 
             <main className={styles.main}>
                 <h1 className={styles.title_recent}>
-                    Contract Address: {contract_address}
+                    Security Report
                 </h1>
+                <h3 className={styles.address}>{contract_address}</h3>
 
 
                 <WorldIDWidget
                     actionId="wid_staging_69e75b2d27bd76510d5752a719fde7e8" // obtain this from developer.worldcoin.org
                     signal="my_signal"
                     enableTelemetry
-                    onSuccess={(verificationResponse) => console.log(verificationResponse)}
+                    onSuccess={(response) => proveHumanity(response)}
                     onError={(error) => console.error(error)}
-                    debug={true} // to aid with debugging, remove in production
+                    debug={false} // to aid with debugging, remove in production
                 />
+
+                <div className={styles.votes}>
+                    <button className={styles.upvote} disabled={!isHuman}>{(isHuman) ? "Upvote" : "Verify with WorldID to Upvote"}</button>
+                    <button className={styles.downvote} disabled={!isHuman}>{(isHuman) ? "Downvote" : "Verify with WorldID to Downvote"}</button>
+                </div>
+
+                <h3 className={styles.address}>Upvotes: {upvotes}</h3>
+                <h3 className={styles.address}>Downvotes: {downvotes}</h3>
 
                 <TableContainer className={styles.table_container} component={Paper}>
                     <Table className={styles.table} aria-label="simple table">
@@ -88,4 +114,26 @@ export default function Contracts() {
         </div>
 
     )
+}
+
+export async function getServerSideProps(context) {
+
+    const { contract_address } = context.query
+
+    // Fetch data from external API
+    const res = await axios.get(`http://localhost:3000/get_upvotes?contractAddr=${contract_address}`)
+
+    const upvotes = await res.data
+
+    console.log("upvotes", upvotes)
+
+    // Fetch data from external API
+    const res_downvotes = await axios.get(`http://localhost:3000/get_downvotes?contractAddr=${contract_address}`)
+
+    const downvotes = await res_downvotes.data
+
+    console.log("downvotes", downvotes)
+
+    // Pass data to the page via props
+    return { props: { upvotes, downvotes } }
 }
