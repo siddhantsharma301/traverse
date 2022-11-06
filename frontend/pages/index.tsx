@@ -31,7 +31,7 @@ export default function Home() {
         <div className={styles.grid}>
           <a href="/recent" className={styles.card}>
             <h2>View Recent Contracts &rarr;</h2>
-            <p>View recently generated security reports on contracts.</p>
+            <p>View security reports on recently published contracts.</p>
           </a>
 
           <a href="/generate" className={styles.card}>

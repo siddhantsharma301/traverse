@@ -136,7 +136,7 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
                     </Table>
                 </TableContainer>
                 {/* TODO: get chain ID of contract and all functions from abi */}
-                <Tenderly address={contractAddress as string} chain_id={1} functions={[]}/>
+                <Tenderly address={contract_address as string} chain_id={1} functions={[]}/>
 
             </main>
         </div>
