@@ -101,6 +101,7 @@ export default function Contracts({ stats, upvotes, downvotes }: { stats: any, u
                     </div>
                     <h4 className={styles.vote_title}>Upvotes: {upvotes_number}</h4>
                     <h4 className={styles.vote_title}>Downvotes: {downvotes_number}</h4>
+                    <h2 className={styles.table_header}>Vulnerabilities detected</h2>
                     <TableContainer className={styles.table_container} component={Paper}>
                         <Table className={styles.table} aria-label="simple table">
                             <TableHead className={styles.table_head}>
