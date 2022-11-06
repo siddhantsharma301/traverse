@@ -63,10 +63,6 @@ export async function getServerSideProps() {
     // Fetch data from external API
     const res = await fetch(`http://localhost:3000/top_contracts`)
     const data = await res.json()
-<<<<<<< HEAD
-
-=======
->>>>>>> 4c014b7827f12e115a82053ed56f383fb0dcee7c
 
     // Pass data to the page via props
     return { props: { data } }
